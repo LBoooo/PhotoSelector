@@ -329,6 +329,23 @@ object PhotoSelector {
             realOpenSelector<List<Photo>>(activity, AlbumType.PHOTO_VIDEO, maxLength, id, result)
         }
     }
+    /**
+     * 打开图片和视频的选择页面。页面启动后即能选择图片文件也能选择视频文件(两者只能选择其一)。
+     * @param fragment 在Fragment中使用时无需Activity实例，只需传入当前的Fragment实例即可。
+     * @param maxLength 最大数量，用于设置最多可选择多少个图片和视频。
+     * @param id    为本次选择设置一个id，该id是去重逻辑的核心。可以不传，如果不传则默认为当前Activity的hashCode，即表示当前Activity中不允许有重复的图片和视频被选择，
+     * 如果当前不是第一次打开图片和视频选择且之前完成过选择(完成是指点击了图片和视频选择页面的完成按钮)，那么之前选择过的视频默认会被勾选(即数据回显)。如果您的页面中有多处需要选择
+     * 图片和视频的地方且去重逻辑互不影响，那么您需要手动为每一处的打开设置不同的id。如果您不希望开启自动去重的功能，那么您可以将该参数设置为ID_REPEATABLE。
+     * @param result 选中结果，当用户点击了完成按钮后会将用户已经勾选的所有图片和视频(包括数据回显选中的图片和视频)回调给您。
+     */
+    fun openPictureSelectorVideoOrImage(fragment: Fragment, maxLength: Int = defMaxLength, id: Int = fragment.hashCode(), result: (photos: List<Photo>?) -> Unit) {
+        fragment.activity?.also { activity ->
+            if (id != ID_REPEATABLE && id != ID_SINGLE) {
+                fragment.lifecycle.addObserver(DistinctManager.instance.tryNewCache(id))
+            }
+            realOpenSelector<List<Photo>>(activity, AlbumType.PHOTO_VIDEO, maxLength, id, result)
+        }
+    }
 
     /**
      * 打开图片视频选择页面（单选）。页面启动后只能选择图片文件。
@@ -355,6 +372,15 @@ object PhotoSelector {
         realOpenSelector<List<Photo>>(context, AlbumType.PHOTO_VIDEO, maxLength, id, result)
     }
 
+    /**
+     * 打开图片和视频的选择页面。页面启动后即能选择图片文件也能选择视频文件(两者只能选择其一)。
+     * @param context 在Activity中使用时您需要传入当前Activity的实例。
+     * @param maxLength 最大数量，用于设置最多可选择多少个图片和视频。
+     * @param id    为本次选择设置一个id，该id是去重逻辑的核心。可以不传，如果不传则默认为当前Activity的hashCode，即表示当前Activity中不允许有重复的图片和视频被选择，
+     * 如果当前不是第一次打开图片和视频选择且之前完成过选择(完成是指点击了图片和视频选择页面的完成按钮)，那么之前选择过的视频默认会被勾选(即数据回显)。如果您的页面中有多处需要选择
+     * 图片和视频的地方且去重逻辑互不影响，那么您需要手动为每一处的打开设置不同的id。如果您不希望开启自动去重的功能，那么您可以将该参数设置为ID_REPEATABLE。
+     * @param result 选中结果，当用户点击了完成按钮后会将用户已经勾选的所有图片和视频(包括数据回显选中的图片和视频)回调给您。
+     */
     fun openPictureSelectorVideoOrImage(context: Context, maxLength: Int = defMaxLength, id: Int = context.hashCode(), result: (photos: List<Photo>?) -> Unit) {
         if (id != ID_REPEATABLE && id != ID_SINGLE && context is LifecycleOwner) {
             context.lifecycle.addObserver(DistinctManager.instance.tryNewCache(id))
