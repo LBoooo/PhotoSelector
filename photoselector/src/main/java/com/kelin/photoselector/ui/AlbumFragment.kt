@@ -91,7 +91,18 @@ internal class AlbumFragment : BasePhotoSelectorFragment() {
 
     private val isSingleSelector by lazy { maxLength == 1 }
 
-    private val listAdapter by lazy { PhotoListAdapter(DistinctManager.instance.getSelected(selectorId, albumType)) }
+    private fun checkSelected():List<Picture>?{
+        val list = DistinctManager.instance.getSelected(selectorId, albumType)
+        if (!list.isNullOrEmpty()){
+            if (list[0].isVideo && isSelectImageOrVideo){
+                return null
+            }
+        }
+        return list
+    }
+    private val listAdapter by lazy { PhotoListAdapter(
+        checkSelected()
+    ) }
 
     private val listLayoutManager by lazy {
         object : GridLayoutManager(requireContext(), getSpanCount(isLandscape(resources.configuration))) {
@@ -330,30 +341,23 @@ internal class AlbumFragment : BasePhotoSelectorFragment() {
             itemView.rlKelinPhotoSelectorChecker.setOnClickListener {
                 listAdapter.getItem(layoutPosition).apply {
                     val selectedPictures = listAdapter.selectedPictures
-
-
                     if (isSelectImageOrVideo) {
                         if (selectedPictures.isNotEmpty()){
-                            var selectType = selectedPictures[0].isVideo
+                            val selectType = selectedPictures[0].isVideo
                             if (selectType){
                                 // 只能选择视频
                                 if (!isVideo){
                                     Toast.makeText(applicationContext, "只能选择图片或视频", Toast.LENGTH_SHORT).show()
-
                                     return@setOnClickListener
                                 }
                             }else{
                                 // 只能选择图片
                                 if (isVideo){
                                     Toast.makeText(applicationContext, "只能选择图片或视频", Toast.LENGTH_SHORT).show()
-
                                     return@setOnClickListener
                                 }
                             }
-
-
                         }
-
                     }
 
                     //如果被选中了的资源中没有当前的资源，那么就认为当前用户的目的是选中，否则就是取消选中。
@@ -365,7 +369,6 @@ internal class AlbumFragment : BasePhotoSelectorFragment() {
                             if (PhotoSelector.isAutoCompress && !isVideo) {
                                 compressAndRotateByDegree()
                             }
-
                             selectedPictures.add(this)
                         } else {
                             //取消选中时判断是否是取消的最后一个，如果不是的话那还要刷新其他的条目变更序号。
@@ -386,6 +389,10 @@ internal class AlbumFragment : BasePhotoSelectorFragment() {
                     }
                     if (isSingleSelector) {
                         onSelectDone()
+                    }
+                    if (isSelectImageOrVideo) {
+                        if (isVideo)
+                            onSelectDone()
                     }
                 }
             }

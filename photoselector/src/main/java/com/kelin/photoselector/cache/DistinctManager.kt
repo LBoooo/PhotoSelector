@@ -34,7 +34,7 @@ internal class DistinctManager private constructor() : CacheOwner<List<Picture>>
     internal fun getSelected(id: Int, albumType: AlbumType): List<Picture>? {
         return if (id != -1) {
             pool[id]?.cache?.let {
-                if (albumType == AlbumType.PHOTO_VIDEO) {
+                if (albumType == AlbumType.PHOTO_VIDEO || albumType == AlbumType.PHOTO_OR_VIDEO ) {
                     it
                 } else {
                     it.filter { photo -> photo.type.type == albumType.type }
