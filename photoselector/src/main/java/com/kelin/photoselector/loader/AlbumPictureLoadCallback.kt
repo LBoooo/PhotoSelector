@@ -51,7 +51,7 @@ internal class AlbumPictureLoadCallback(private val context: Context, private va
                 FileColumns.MIME_TYPE,
                 FileColumns.DATE_MODIFIED
             ),
-            " ${FileColumns.SIZE} > 0 AND ${AlbumType.typeOf(id).query}",
+            " ${FileColumns.SIZE} > 0 AND ${FileColumns.SIZE} <= ${100*1024*1024} AND ${AlbumType.typeOf(id).query}",
             null,
             "${FileColumns.DATE_MODIFIED} DESC"
         )
