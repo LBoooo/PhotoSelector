@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+
     package="com.kelin.photoselectordemo">
 
     <!--网络权限，如果你需要预览网络图片或视频则必须添加改权限-->
@@ -15,6 +16,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+
         android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_android"

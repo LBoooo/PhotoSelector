@@ -23,11 +23,11 @@ internal enum class AlbumType(val type: Int, val query: String) {
     /**
      * 照片和视频的混合相册。
      */
-    PHOTO_VIDEO(0x03, "${FileColumns.MEDIA_TYPE} = ${FileColumns.MEDIA_TYPE_IMAGE} OR ${FileColumns.MEDIA_TYPE} = ${FileColumns.MEDIA_TYPE_VIDEO}"),
+    PHOTO_VIDEO(0x03, "(${FileColumns.MEDIA_TYPE} = ${FileColumns.MEDIA_TYPE_IMAGE} OR ${FileColumns.MEDIA_TYPE} = ${FileColumns.MEDIA_TYPE_VIDEO})"),
     /**
      * 照片和视频的混合相册。
      */
-    PHOTO_OR_VIDEO(0x04, "${FileColumns.MEDIA_TYPE} = ${FileColumns.MEDIA_TYPE_IMAGE} OR ${FileColumns.MEDIA_TYPE} = ${FileColumns.MEDIA_TYPE_VIDEO}");
+    PHOTO_OR_VIDEO(0x04, "(${FileColumns.MEDIA_TYPE} = ${FileColumns.MEDIA_TYPE_IMAGE} OR ${FileColumns.MEDIA_TYPE} = ${FileColumns.MEDIA_TYPE_VIDEO})");
 
 
     companion object {

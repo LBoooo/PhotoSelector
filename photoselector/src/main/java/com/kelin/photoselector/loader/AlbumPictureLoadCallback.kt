@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -20,7 +19,6 @@ import com.kelin.photoselector.model.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * **描述:** LoadCallback的具体实现，相册加载逻辑的具体处理。
@@ -51,7 +49,7 @@ internal class AlbumPictureLoadCallback(private val context: Context, private va
                 FileColumns.MIME_TYPE,
                 FileColumns.DATE_MODIFIED
             ),
-            " ${FileColumns.SIZE} > 0 AND ${FileColumns.SIZE} <= ${100*1024*1024} AND ${AlbumType.typeOf(id).query}",
+            " ${FileColumns.SIZE} > 0 AND ${FileColumns.SIZE} <= 104857600 AND ${AlbumType.typeOf(id).query}",
             null,
             "${FileColumns.DATE_MODIFIED} DESC"
         )
@@ -83,8 +81,13 @@ internal class AlbumPictureLoadCallback(private val context: Context, private va
                             size >= 4096 -> { //但是视频太小的将会导致无法播放，所以这里过滤一下文件大小。
                                 //有些手机的有些视频可能从数据库查不到视频长度，如果长度是0则认为没有查到，那么就用下面的方式重新获取一次视频长度。
                                 MediaMetadataRetriever().let { m ->
+                                    try {
+//                                      m.setDataSource(path, HashMap<String, String>())
                                     m.setDataSource(path)
-                                    m.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 1
+                                        m.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 1L
+                                    }catch (err :IllegalArgumentException){
+                                        1L
+                                    }
                                 }
                             }
                             else -> 0
