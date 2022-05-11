@@ -238,7 +238,7 @@ internal class AlbumFragment : BasePhotoSelectorFragment() {
             View.INVISIBLE
         }
         tvKelinPhotoSelectorPreview.apply {
-            visibility = visible
+            visibility = View.GONE
             if (selectedCount > 0) {
                 text = "${getString(R.string.kelin_photo_selector_preview)}(${selectedCount})"
             }
