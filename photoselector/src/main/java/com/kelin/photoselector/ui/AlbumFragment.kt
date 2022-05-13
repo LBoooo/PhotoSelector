@@ -371,7 +371,7 @@ internal class AlbumFragment : BasePhotoSelectorFragment() {
                         Toast.makeText(applicationContext, "最多只能选择${maxLength}${if (albumType == AlbumType.PHOTO) "张" else "个"}$message", Toast.LENGTH_SHORT).show()
                     } else {
                         if (isSelected) {
-                            if (PhotoSelector.isAutoCompress && !isVideo) {
+                            if (PhotoSelector.isAutoCompress && !isVideo ) {
                                 compressAndRotateByDegree()
                             }
                             selectedPictures.add(this)

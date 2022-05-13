@@ -6,6 +6,7 @@ import android.graphics.Matrix
 import androidx.exifinterface.media.ExifInterface
 import com.kelin.photoselector.PhotoSelector
 import com.kelin.photoselector.model.Picture
+import com.kelin.photoselector.utils.compresshelper.CompressHelper
 import java.io.File
 import java.io.FileOutputStream
 import java.util.concurrent.Executors
@@ -58,10 +59,22 @@ internal fun Picture.compressAndRotateByDegree() {
 }
 
 internal fun Picture.compress(screenWidth: Int, screenHeight: Int, degree: Float): Bitmap? {
+
+
     val opts = BitmapFactory.Options()
     opts.inJustDecodeBounds = true
     BitmapFactory.decodeFile(uri, opts)
-    return if (screenWidth > 0 && screenHeight > 0 && !opts.outMimeType.contains("gif")) {
+
+    return if (size <= 1048576){
+        opts.inJustDecodeBounds = false
+        BitmapFactory.decodeFile(uri, opts)
+    }else if (size <= 31457280){  //52428800
+        // 不需要压缩
+        opts.inSampleSize = 2
+        opts.inJustDecodeBounds = false
+        BitmapFactory.decodeFile(uri, opts)
+//        BitmapFactory.decodeFile(uri)
+    }else if (screenWidth > 0 && screenHeight > 0 && !opts.outMimeType.contains("gif")) {
         val width = opts.outWidth
         val height = opts.outHeight
         val vertical = if (degree == 0f || degree == 180f) { // 如果是竖立的图片
@@ -74,7 +87,7 @@ internal fun Picture.compress(screenWidth: Int, screenHeight: Int, degree: Float
         } else {
             max(height / screenWidth, width / screenHeight)
         }
-        opts.inSampleSize = inSampleSize
+        opts.inSampleSize = 4
         opts.inJustDecodeBounds = false
         BitmapFactory.decodeFile(uri, opts)
     } else {
@@ -100,7 +113,7 @@ internal fun Bitmap.writeToFile(targetPath: String): String? {
         if (hasAlpha()) {
             compress(Bitmap.CompressFormat.PNG, 100, fos)
         } else {
-            compress(Bitmap.CompressFormat.JPEG, 70, fos)
+            compress(Bitmap.CompressFormat.JPEG, 90, fos)
         }
         fos.flush()
         fos.close()

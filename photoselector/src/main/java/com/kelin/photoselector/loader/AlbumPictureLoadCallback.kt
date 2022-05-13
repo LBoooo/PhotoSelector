@@ -48,8 +48,8 @@ internal class AlbumPictureLoadCallback(private val context: Context, private va
                 FileColumns.SIZE,
                 FileColumns.MIME_TYPE,
                 FileColumns.DATE_MODIFIED
-            ),
-            " ${FileColumns.SIZE} > 0 AND ${FileColumns.SIZE} <= 104857600 AND ${AlbumType.typeOf(id).query}",
+            ),//104857600  小于50mb
+            " ${FileColumns.SIZE} > 0 AND ${FileColumns.SIZE} <= 52428800 AND ${AlbumType.typeOf(id).query} AND ((${FileColumns.MEDIA_TYPE} == ${FileColumns.MEDIA_TYPE_IMAGE}) OR ${FileColumns.DURATION}<= 15000)",
             null,
             "${FileColumns.DATE_MODIFIED} DESC"
         )

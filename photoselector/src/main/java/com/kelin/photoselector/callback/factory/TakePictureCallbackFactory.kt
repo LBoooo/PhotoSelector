@@ -71,6 +71,7 @@ class TakePictureCallbackFactory(private val id: Int, private val action: String
                         if (isVideoAction) PictureType.VIDEO else PictureType.PHOTO, duration.formatToDurationString(),
                         SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(Date())
                     )
+                    // 大于50mb开启压缩
                     if (PhotoSelector.isAutoCompress && !isVideoAction) {
                         picture.compressAndRotateByDegree()
                     }

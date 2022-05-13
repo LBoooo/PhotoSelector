@@ -3,11 +3,13 @@ package com.kelin.photoselectordemo
 import android.graphics.Picture
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.core.net.toFile
 import com.kelin.photoselector.PhotoSelector
 import com.kelin.photoselector.model.PhotoImpl
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -102,6 +104,14 @@ class MainActivity : AppCompatActivity() {
                     ImageListActivity.start(this, *photos.map {
                         it.uri
                     }.toTypedArray())
+
+                    photos.forEach {
+                        File(it.uri).apply {
+                            Log.e("FILE---->>>>","${name} ${length()}")
+
+
+                        }
+                    }
                 }
             }
         }
