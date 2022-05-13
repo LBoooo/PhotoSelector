@@ -91,18 +91,21 @@ internal class AlbumFragment : BasePhotoSelectorFragment() {
 
     private val isSingleSelector by lazy { maxLength == 1 }
 
-    private fun checkSelected():List<Picture>?{
+    private fun checkSelected(): List<Picture>? {
         val list = DistinctManager.instance.getSelected(selectorId, albumType)
-        if (!list.isNullOrEmpty()){
-            if (list[0].isVideo && isSelectImageOrVideo){
+        if (!list.isNullOrEmpty()) {
+            if (list[0].isVideo && isSelectImageOrVideo) {
                 return null
             }
         }
         return list
     }
-    private val listAdapter by lazy { PhotoListAdapter(
-        checkSelected()
-    ) }
+
+    private val listAdapter by lazy {
+        PhotoListAdapter(
+            checkSelected()
+        )
+    }
 
     private val listLayoutManager by lazy {
         object : GridLayoutManager(requireContext(), getSpanCount(isLandscape(resources.configuration))) {
@@ -267,6 +270,9 @@ internal class AlbumFragment : BasePhotoSelectorFragment() {
 
         fun setPhotos(photos: List<Picture>, refresh: Boolean = true) {
             photoList = photos
+                .filter {
+                    !it.name.endsWith("gif")
+                }
             if (refresh) {
                 notifyDataSetChanged()
             }
@@ -335,24 +341,23 @@ internal class AlbumFragment : BasePhotoSelectorFragment() {
     }
 
 
-
     private inner class PhotoHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.rlKelinPhotoSelectorChecker.setOnClickListener {
                 listAdapter.getItem(layoutPosition).apply {
                     val selectedPictures = listAdapter.selectedPictures
                     if (isSelectImageOrVideo) {
-                        if (selectedPictures.isNotEmpty()){
+                        if (selectedPictures.isNotEmpty()) {
                             val selectType = selectedPictures[0].isVideo
-                            if (selectType){
+                            if (selectType) {
                                 // 只能选择视频
-                                if (!isVideo){
+                                if (!isVideo) {
                                     Toast.makeText(applicationContext, "只能选择图片或视频", Toast.LENGTH_SHORT).show()
                                     return@setOnClickListener
                                 }
-                            }else{
+                            } else {
                                 // 只能选择图片
-                                if (isVideo){
+                                if (isVideo) {
                                     Toast.makeText(applicationContext, "只能选择图片或视频", Toast.LENGTH_SHORT).show()
                                     return@setOnClickListener
                                 }

@@ -74,7 +74,7 @@ internal data class Picture internal constructor(
         get() = File(path).name
 
     override val uri: String
-        get() = cachePath ?: path
+        get() = path
 
     override val isVideo: Boolean
         get() = type == PictureType.VIDEO

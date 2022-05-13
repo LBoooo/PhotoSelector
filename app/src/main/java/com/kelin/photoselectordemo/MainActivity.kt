@@ -1,5 +1,6 @@
 package com.kelin.photoselectordemo
 
+import android.graphics.Picture
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -49,7 +50,9 @@ class MainActivity : AppCompatActivity() {
                 if (photos.isNullOrEmpty()) {
                     Toast.makeText(this, "选择已被取消", Toast.LENGTH_SHORT).show()
                 } else {
-                    ImageListActivity.start(this, *photos.map { it.uri }.toTypedArray())
+                    ImageListActivity.start(this, *photos.map {
+                        it.uri
+                    }.toTypedArray())
                 }
             }
         }
@@ -95,7 +98,10 @@ class MainActivity : AppCompatActivity() {
                 if (photos.isNullOrEmpty()) {
                     Toast.makeText(this, "选择已被取消", Toast.LENGTH_SHORT).show()
                 } else {
-                    ImageListActivity.start(this, *photos.map { it.uri }.toTypedArray())
+
+                    ImageListActivity.start(this, *photos.map {
+                        it.uri
+                    }.toTypedArray())
                 }
             }
         }
