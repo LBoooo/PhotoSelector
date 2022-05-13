@@ -65,12 +65,12 @@ internal fun Picture.compress(screenWidth: Int, screenHeight: Int, degree: Float
     opts.inJustDecodeBounds = true
     BitmapFactory.decodeFile(uri, opts)
 
-    return if (size <= 1048576){
+    return if (size <= 524288){
         opts.inJustDecodeBounds = false
         BitmapFactory.decodeFile(uri, opts)
-    }else if (size <= 31457280){  //52428800
+    }else if (size <= 31457280){
         // 不需要压缩
-        opts.inSampleSize = 2
+        opts.inSampleSize = 4
         opts.inJustDecodeBounds = false
         BitmapFactory.decodeFile(uri, opts)
 //        BitmapFactory.decodeFile(uri)
@@ -87,7 +87,7 @@ internal fun Picture.compress(screenWidth: Int, screenHeight: Int, degree: Float
         } else {
             max(height / screenWidth, width / screenHeight)
         }
-        opts.inSampleSize = 4
+        opts.inSampleSize = 8
         opts.inJustDecodeBounds = false
         BitmapFactory.decodeFile(uri, opts)
     } else {
@@ -113,7 +113,7 @@ internal fun Bitmap.writeToFile(targetPath: String): String? {
         if (hasAlpha()) {
             compress(Bitmap.CompressFormat.PNG, 100, fos)
         } else {
-            compress(Bitmap.CompressFormat.JPEG, 90, fos)
+            compress(Bitmap.CompressFormat.JPEG, 80, fos)
         }
         fos.flush()
         fos.close()
